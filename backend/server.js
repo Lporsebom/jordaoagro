@@ -8,7 +8,10 @@ const fs = require('fs');
 const db = require('./database');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
+// ===== Confia no proxy do Render (necessário pra HTTPS e cookies em produção) =====
+app.set('trust proxy', 1);
 
 // ===== Garante que a pasta uploads/ existe =====
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -29,11 +32,18 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/uploads', express.static(uploadsDir));
+
 app.use(session({
   secret: 'troque-essa-chave-secreta-por-outra-mais-segura',
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 } // 7 dias
+  cookie: {
+    maxAge: 1000 * 60 * 60 * 24 * 7, // 7 dias
+    secure: process.env.NODE_ENV === 'production', // HTTPS em produção
+    sameSite: 'lax',
+    httpOnly: true
+  },
+  proxy: true
 }));
 
 // ===== Middlewares de proteção =====
