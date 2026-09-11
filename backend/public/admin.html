@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Admin — Jordão Agropet</title>
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .admin-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .admin-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 28px;
+      border-bottom: 2px solid #e0e0e0;
+      flex-wrap: wrap;
+    }
+    .admin-tab {
+      padding: 12px 20px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: #666;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .admin-tab:hover {
+      color: var(--verde);
+    }
+    .admin-tab.ativo {
+      color: var(--verde);
+      border-bottom-color: var(--verde);
+    }
+    .admin-painel {
+      display: none;
+    }
+    .admin-painel.ativo {
+      display: block;
+    }
+    .admin-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 24px;
+      margin-bottom: 24px;
+    }
+    .admin-card h3 {
+      color: var(--verde-escuro);
+      margin-bottom: 16px;
+      font-size: 18px;
+    }
+    .form-linha {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 700px) {
+      .form-linha { grid-template-columns: 1fr; }
+    }
+    .form-linha.full {
+      grid-template-columns: 1fr;
+    }
+    .campo textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--cinza-borda);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      resize: vertical;
+      min-height: 80px;
+    }
+    .campo textarea:focus {
+      outline: none;
+      border-color: var(--verde-claro);
+      box-shadow: 0 0 0 3px rgba(76,175,80,0.15);
+    }
+    .tabela-produtos {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    .tabela-produtos th {
+      text-align: left;
+      padding: 12px;
+      background: #f5f5f5;
+      color: var(--verde-escuro);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+    .tabela-produtos td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+      vertical-align: middle;
+    }
+    .tabela-produtos img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border-radius: 6px;
+      background: #eee;
+    }
+    .btn-acao {
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 8px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: background 0.2s;
+    }
+    .btn-acao.editar { color: #2979ff; }
+    .btn-acao.editar:hover { background: rgba(41,121,255,0.1); }
+    .btn-acao.excluir { color: #c62828; }
+    .btn-acao.excluir:hover { background: rgba(198,40,40,0.1); }
+
+    .btn-secundario {
+      background: #fff;
+      color: var(--verde);
+      border: 2px solid var(--verde);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-secundario:hover {
+      background: var(--verde);
+      color: #fff;
+    }
+    .btn-perigo {
+      background: #c62828;
+      color: #fff;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .dropzone {
+      border: 2px dashed var(--verde-claro);
+      border-radius: 10px;
+      padding: 32px 20px;
+      text-align: center;
+      background: rgba(76,175,80,0.04);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .dropzone:hover {
+      background: rgba(76,175,80,0.1);
+      border-color: var(--verde);
+    }
+    .dropzone i {
+      font-size: 40px;
+      color: var(--verde);
+      margin-bottom: 12px;
+    }
+    .dropzone p {
+      color: var(--texto-claro);
+      font-size: 14px;
+    }
+    .dropzone input[type="file"] {
+      display: none;
+    }
+    .info-planilha {
+      background: #fff3cd;
+      border-left: 4px solid #ffc107;
+      padding: 14px 18px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      color: #856404;
+    }
+    .info-planilha strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+    .info-planilha code {
+      background: rgba(0,0,0,0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .preview-imagem {
+      max-width: 200px;
+      max-height: 200px;
+      border-radius: 8px;
+      margin-top: 12px;
+      display: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .sem-acesso {
+      text-align: center;
+      padding: 80px 20px;
+    }
+    .sem-acesso i {
+      font-size: 64px;
+      color: #c62828;
+      margin-bottom: 20px;
+    }
+    .sem-acesso h2 {
+      color: #c62828;
+      margin-bottom: 12px;
+    }
+    .sem-acesso p {
+      color: #666;
+      margin-bottom: 24px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="logo">
+        <img src="img/logo.png" alt="Jordão Agropet">
+        <span>Jordão Agropet</span>
+      </a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="admin.html" class="ativo">Painel Admin</a>
+        <a href="#" id="linkLogout" class="destaque">Sair</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="admin-container" id="adminContainer">
+      <!-- Conteúdo é renderizado pelo JS -->
+    </div>
+  </main>
+
+  <footer>
+    <div class="footer-copy">
+      <p>© 2026 Jordão Agropet — Painel Administrativo</p>
+    </div>
+  </footer>
+
+  <script>
+    let produtosAdmin = [];
+    let editandoId = null;
+
+    function formatarPreco(v) {
+      return 'R$ ' + Number(v).toFixed(2).replace('.', ',');
+    }
+
+    function mostrarMensagem(msg, tipo = 'sucesso') {
+      const el = document.getElementById('mensagemAdmin');
+      if (!el) return;
+      el.className = 'mensagem ' + tipo;
+      el.textContent = msg;
+      el.style.display = 'block';
+      setTimeout(() => { el.style.display = 'none'; }, 4000);
+    }
+
+    // ===== Verifica se é admin =====
+    async function verificarAdmin() {
+      const container = document.getElementById('adminContainer');
+
+      try {
+        const res = await fetch('/api/me');
+        const me = await res.json();
+
+        if (!me) {
+          container.innerHTML = `
+            <div class="sem-acesso">
+              <i class="fa-solid fa-lock"></i>
+              <h2>Faça login para continuar</h2>
+              <p>Você precisa estar logado como administrador</p>
+              <a href="login.html" class="btn-principal" style="display:inline-block;width:auto;padding:12px 24px;text-decoration:none;">Entrar</a>
+            </div>
+          `;
+          return;
+        }
+
+        if (!me.is_admin) {
+          container.innerHTML = `
+            <div class="sem-acesso">
+              <i class="fa-solid fa-ban"></i>
+              <h2>Acesso restrito</h2>
+              <p>Esta área é exclusiva para administradores</p>
+              <a href="index.html" class="btn-principal" style="display:inline-block;width:auto;padding:12px 24px;text-decoration:none;">Voltar para a loja</a>
+            </div>
+          `;
+          return;
+        }
+
+        // Configura botão sair
+        document.getElementById('linkLogout').onclick = async (e) => {
+          e.preventDefault();
+          await fetch('/api/logout', { method: 'POST' });
+          window.location.href = 'index.html';
+        };
+
+        renderizarPainel();
+        carregarProdutos();
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = `<p style="text-align:center;color:#c62828;padding:40px;">Erro ao carregar. O servidor está rodando?</p>`;
+      }
+    }
+
+    // ===== Renderiza o painel =====
+    function renderizarPainel() {
+      const container = document.getElementById('adminContainer');
+      container.innerHTML = `
+        <div id="mensagemAdmin" class="mensagem"></div>
+
+        <div class="admin-tabs">
+          <button class="admin-tab ativo" onclick="trocarAba('produtos', this)">
+            <i class="fa-solid fa-box"></i> Produtos
+          </button>
+          <button class="admin-tab" onclick="trocarAba('adicionar', this)">
+            <i class="fa-solid fa-plus"></i> Adicionar Produto
+          </button>
+          <button class="admin-tab" onclick="trocarAba('importar', this)">
+            <i class="fa-solid fa-file-excel"></i> Importar Excel
+          </button>
+          <button class="admin-tab" onclick="trocarAba('pedidos', this)">
+            <i class="fa-solid fa-receipt"></i> Pedidos
+          </button>
+        </div>
+
+        <!-- ABA PRODUTOS -->
+        <div id="aba-produtos" class="admin-painel ativo">
+          <div class="admin-card">
+            <h3>Produtos cadastrados</h3>
+            <div id="listaProdutosAdmin">Carregando...</div>
+          </div>
+        </div>
+
+        <!-- ABA ADICIONAR -->
+        <div id="aba-adicionar" class="admin-painel">
+          <div class="admin-card">
+            <h3 id="tituloForm">Adicionar novo produto</h3>
+            <form id="formProduto">
+              <div class="form-linha">
+                <div class="campo">
+                  <label>Nome do produto *</label>
+                  <input type="text" name="nome" required placeholder="Ex: Ração Premium 15kg">
+                </div>
+                <div class="campo">
+                  <label>Categoria</label>
+                  <input type="text" name="categoria" placeholder="Ex: Ração">
+                </div>
+              </div>
+
+              <div class="form-linha full">
+                <div class="campo">
+                  <label>Descrição</label>
+                  <textarea name="descricao" placeholder="Detalhes do produto..."></textarea>
+                </div>
+              </div>
+
+              <div class="form-linha">
+                <div class="campo">
+                  <label>Preço (R$) *</label>
+                  <input type="number" name="preco" step="0.01" min="0" required placeholder="0,00">
+                </div>
+                <div class="campo">
+                  <label>Foto do produto</label>
+                  <input type="file" name="imagem" accept="image/*" onchange="previewImagem(this)">
+                  <img id="previewImg" class="preview-imagem" alt="Preview">
+                </div>
+              </div>
+
+              <div style="display:flex;gap:12px;margin-top:8px;">
+                <button type="submit" class="btn-principal" style="width:auto;padding:12px 24px;" id="btnSalvar">
+                  Salvar produto
+                </button>
+                <button type="button" class="btn-secundario" id="btnCancelar" style="display:none;" onclick="cancelarEdicao()">
+                  Cancelar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ABA IMPORTAR -->
+        <div id="aba-importar" class="admin-painel">
+          <div class="admin-card">
+            <h3>Importar produtos via Excel</h3>
+
+            <div class="info-planilha">
+              <strong>📋 Formato esperado da planilha:</strong>
+              A primeira linha deve ter os títulos das colunas. As colunas aceitas são:
+              <code>nome</code>, <code>descricao</code>, <code>preco</code>, <code>categoria</code>.
+              <br><br>
+              ⚠️ <strong>Apenas os produtos com nome e preço preenchidos serão importados.</strong>
+            </div>
+
+            <form id="formImportar">
+              <div class="dropzone" onclick="document.getElementById('arquivoExcel').click()">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <p id="nomeArquivo">Clique para escolher um arquivo .xlsx ou .xls</p>
+                <input type="file" id="arquivoExcel" name="planilha" accept=".xlsx,.xls" required onchange="mostrarNomeArquivo(this)">
+              </div>
+              <button type="submit" class="btn-principal" style="margin-top:16px;width:auto;padding:12px 24px;">
+                <i class="fa-solid fa-upload"></i> Importar produtos
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- ABA PEDIDOS -->
+        <div id="aba-pedidos" class="admin-painel">
+          <div class="admin-card">
+            <h3>Pedidos dos clientes</h3>
+            <div id="listaPedidos">Carregando...</div>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('formProduto').addEventListener('submit', salvarProduto);
+      document.getElementById('formImportar').addEventListener('submit', importarExcel);
+    }
+
+    // ===== Trocar abas =====
+    function trocarAba(nome, botao) {
+      document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('ativo'));
+      document.querySelectorAll('.admin-painel').forEach(p => p.classList.remove('ativo'));
+      botao.classList.add('ativo');
+      document.getElementById('aba-' + nome).classList.add('ativo');
+
+      if (nome === 'pedidos') carregarPedidos();
+    }
+
+    // ===== Preview de imagem =====
+    function previewImagem(input) {
+      const preview = document.getElementById('previewImg');
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          preview.src = e.target.result;
+          preview.style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+      } else {
+        preview.style.display = 'none';
+      }
+    }
+
+    // ===== Mostrar nome do arquivo =====
+    function mostrarNomeArquivo(input) {
+      const p = document.getElementById('nomeArquivo');
+      p.textContent = input.files[0] ? input.files[0].name : 'Clique para escolher um arquivo .xlsx ou .xls';
+    }
+
+    // ===== Carregar produtos =====
+    async function carregarProdutos() {
+      const div = document.getElementById('listaProdutosAdmin');
+      try {
+        const res = await fetch('/api/produtos');
+        produtosAdmin = await res.json();
+
+        if (produtosAdmin.length === 0) {
+          div.innerHTML = '<p style="text-align:center;color:#666;padding:20px;">Nenhum produto cadastrado ainda.</p>';
+          return;
+        }
+
+        div.innerHTML = `
+          <table class="tabela-produtos">
+            <thead>
+              <tr>
+                <th>Foto</th>
+                <th>Nome</th>
+                <th>Categoria</th>
+                <th>Preço</th>
+                <th style="text-align:right;">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${produtosAdmin.map(p => {
+                const img = p.imagem
+                  ? `/uploads/${p.imagem}`
+                  : 'https://via.placeholder.com/50x50/4caf50/ffffff?text=?';
+                return `
+                  <tr>
+                    <td><img src="${img}" alt="${p.nome}"></td>
+                    <td><strong>${p.nome}</strong></td>
+                    <td>${p.categoria || '—'}</td>
+                    <td>${formatarPreco(p.preco)}</td>
+                    <td style="text-align:right;">
+                      <button class="btn-acao editar" onclick="editarProduto(${p.id})" title="Editar">
+                        <i class="fa-solid fa-pen"></i>
+                      </button>
+                      <button class="btn-acao excluir" onclick="excluirProduto(${p.id})" title="Excluir">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (err) {
+        div.innerHTML = '<p style="color:#c62828;">Erro ao carregar produtos.</p>';
+      }
+    }
+
+    // ===== Salvar produto =====
+    async function salvarProduto(e) {
+      e.preventDefault();
+      const form = e.target;
+      const fd = new FormData(form);
+
+      const url = editandoId ? `/api/produtos/${editandoId}` : '/api/produtos';
+      const method = editandoId ? 'PUT' : 'POST';
+
+      try {
+        const res = await fetch(url, { method, body: fd });
+        const data = await res.json();
+
+        if (res.ok) {
+          mostrarMensagem(data.mensagem || 'Produto salvo!', 'sucesso');
+          form.reset();
+          document.getElementById('previewImg').style.display = 'none';
+          cancelarEdicao();
+          carregarProdutos();
+          setTimeout(() => trocarAba('produtos', document.querySelectorAll('.admin-tab')[0]), 1000);
+        } else {
+          mostrarMensagem(data.erro || 'Erro ao salvar', 'erro');
+        }
+      } catch (err) {
+        mostrarMensagem('Erro de conexão', 'erro');
+      }
+    }
+
+    // ===== Editar produto =====
+    function editarProduto(id) {
+      const p = produtosAdmin.find(x => x.id === id);
+      if (!p) return;
+
+      editandoId = id;
+      const form = document.getElementById('formProduto');
+      form.nome.value = p.nome;
+      form.descricao.value = p.descricao || '';
+      form.preco.value = p.preco;
+      form.categoria.value = p.categoria || '';
+      form.imagem.value = '';
+
+      document.getElementById('tituloForm').textContent = 'Editar produto';
+      document.getElementById('btnSalvar').textContent = 'Salvar alterações';
+      document.getElementById('btnCancelar').style.display = 'inline-block';
+
+      // Mostra imagem atual
+      const preview = document.getElementById('previewImg');
+      if (p.imagem) {
+        preview.src = `/uploads/${p.imagem}`;
+        preview.style.display = 'block';
+      } else {
+        preview.style.display = 'none';
+      }
+
+      trocarAba('adicionar', document.querySelectorAll('.admin-tab')[1]);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function cancelarEdicao() {
+      editandoId = null;
+      document.getElementById('formProduto').reset();
+      document.getElementById('tituloForm').textContent = 'Adicionar novo produto';
+      document.getElementById('btnSalvar').textContent = 'Salvar produto';
+      document.getElementById('btnCancelar').style.display = 'none';
+      document.getElementById('previewImg').style.display = 'none';
+    }
+
+    // ===== Excluir produto =====
+    async function excluirProduto(id) {
+      if (!confirm('Tem certeza que deseja excluir este produto?')) return;
+
+      try {
+        const res = await fetch(`/api/produtos/${id}`, { method: 'DELETE' });
+        if (res.ok) {
+          mostrarMensagem('Produto excluído!', 'sucesso');
+          carregarProdutos();
+        } else {
+          mostrarMensagem('Erro ao excluir', 'erro');
+        }
+      } catch (err) {
+        mostrarMensagem('Erro de conexão', 'erro');
+      }
+    }
+
+    // ===== Importar Excel =====
+    async function importarExcel(e) {
+      e.preventDefault();
+      const form = e.target;
+      const fd = new FormData(form);
+
+      try {
+        const res = await fetch('/api/produtos/importar', { method: 'POST', body: fd });
+        const data = await res.json();
+
+        if (res.ok) {
+          mostrarMensagem(`✅ ${data.importados} produtos importados com sucesso!`, 'sucesso');
+          form.reset();
+          document.getElementById('nomeArquivo').textContent = 'Clique para escolher um arquivo .xlsx ou .xls';
+          carregarProdutos();
+        } else {
+          mostrarMensagem(data.erro || 'Erro ao importar', 'erro');
+        }
+      } catch (err) {
+        mostrarMensagem('Erro de conexão', 'erro');
+      }
+    }
+
+    // ===== Carregar pedidos =====
+    async function carregarPedidos() {
+      const div = document.getElementById('listaPedidos');
+      try {
+        const res = await fetch('/api/pedidos/todos');
+        if (res.status === 401 || res.status === 403) {
+          div.innerHTML = '<p style="text-align:center;color:#666;padding:20px;">Você precisa ser admin.</p>';
+          return;
+        }
+        const pedidos = await res.json();
+
+        if (pedidos.length === 0) {
+          div.innerHTML = '<p style="text-align:center;color:#666;padding:20px;">Nenhum pedido registrado ainda.</p>';
+          return;
+        }
+
+        div.innerHTML = `
+          <table class="tabela-produtos">
+            <thead>
+              <tr>
+                <th>Data</th>
+                <th>Cliente</th>
+                <th>Produto</th>
+                <th>Qtd</th>
+                <th>Total</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${pedidos.map(p => `
+                <tr>
+                  <td>${p.data || ''}</td>
+                  <td>${p.cliente_nome || '—'}<br><small style="color:#999;">${p.cliente_email || ''}</small></td>
+                  <td>${p.produto_nome || '—'}</td>
+                  <td>${p.quantidade}</td>
+                  <td>${formatarPreco(p.total)}</td>
+                  <td><span style="background:#fff3cd;color:#856404;padding:3px 8px;border-radius:8px;font-size:11px;font-weight:700;">${p.status}</span></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (err) {
+        div.innerHTML = '<p style="color:#c62828;">Erro ao carregar pedidos.</p>';
+      }
+    }
+
+    // ===== Inicialização =====
+    verificarAdmin();
+  </script>
+</body>
+</html>

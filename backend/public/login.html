@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Entrar — Jordão Agropet</title>
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="logo">
+        <img src="img/logo.png" alt="Jordão Agropet">
+        <span>Jordão Agropet</span>
+      </a>
+
+      <form class="busca" id="formBusca" onsubmit="event.preventDefault(); window.location.href='index.html?busca=' + encodeURIComponent(document.getElementById('campoBusca').value);">
+        <input 
+          type="text" 
+          id="campoBusca" 
+          placeholder="Olá, o que você precisa hoje?" 
+          autocomplete="off"
+        >
+        <button type="submit" aria-label="Buscar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </form>
+
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="contato.html">Contato</a>
+        <a href="cadastro.html" class="destaque">Cadastrar</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="auth-container">
+    <div class="auth-card">
+      <h2>Entrar</h2>
+      <p class="subtitulo">Acesse sua conta para ver seu histórico</p>
+
+      <div id="mensagem" class="mensagem"></div>
+
+      <form id="formLogin">
+        <div class="campo">
+          <label for="email">E-mail</label>
+          <input type="email" id="email" name="email" required placeholder="seu@email.com">
+        </div>
+
+        <div class="campo">
+          <label for="senha">Senha</label>
+          <input type="password" id="senha" name="senha" required placeholder="••••••••">
+        </div>
+
+        <button type="submit" class="btn-principal">Entrar</button>
+      </form>
+
+      <p class="link-rodape">
+        Não tem conta? <a href="cadastro.html">Cadastre-se</a>
+      </p>
+    </div>
+  </div>
+
+  <!-- WhatsApp Flutuante -->
+  <a href="https://wa.me/5519990143597?text=Ol%C3%A1%2C%20eu%20vim%20do%20site%20da%20Jord%C3%A3o%20Agropet" 
+     class="whatsapp-flutuante" 
+     title="Fale conosco no WhatsApp" 
+     target="_blank" 
+     rel="noopener noreferrer">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-logo">
+        <img src="img/logo.png" alt="Jordão Agropet">
+      </div>
+
+      <div class="footer-info">
+        <div class="info-grupo email">
+          <div class="info-header">
+            <span class="icon-badge">
+              <i class="fa-solid fa-envelope"></i>
+            </span>
+            Email
+          </div>
+          <a href="mailto:JordãoAgropet@outlook.com">JordãoAgropet@outlook.com</a>
+        </div>
+
+        <div class="info-grupo whatsapp">
+          <div class="info-header">
+            <span class="icon-badge">
+              <i class="fa-brands fa-whatsapp"></i>
+            </span>
+            WhatsApp
+          </div>
+          <a href="https://wa.me/5519990143597?text=Ol%C3%A1%2C%20eu%20vim%20do%20site%20da%20Jord%C3%A3o%20Agropet" target="_blank">(19) 99014-3597</a>
+        </div>
+
+        <div class="info-grupo endereco">
+          <div class="info-header">
+            <span class="icon-badge">
+              <i class="fa-solid fa-location-dot"></i>
+            </span>
+            Endereço
+          </div>
+          <p>R. Padre Antônio Vieira, 35 - Sala 02 (Jaraguá)</p>
+        </div>
+
+        <div class="info-grupo instagram">
+          <div class="info-header">
+            <span class="icon-badge">
+              <i class="fa-brands fa-instagram"></i>
+            </span>
+            Instagram
+          </div>
+          <a href="https://www.instagram.com/jordaoagropet/" target="_blank">@jordaoagropet</a>
+        </div>
+      </div>
+
+      <div class="footer-contato-link">
+        <a href="contato.html" class="btn-contato-footer">Mais Informações</a>
+      </div>
+    </div>
+
+    <div class="footer-copy">
+      <p>© 2026 Jordão Agropet — Todos os direitos reservados</p>
+    </div>
+  </footer>
+
+  <script>
+    const form = document.getElementById('formLogin');
+    const msg = document.getElementById('mensagem');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.className = 'mensagem';
+
+      const email = document.getElementById('email').value;
+      const senha = document.getElementById('senha').value;
+
+      try {
+        const res = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, senha })
+        });
+        const data = await res.json();
+
+        if (res.ok) {
+          msg.className = 'mensagem sucesso';
+          msg.textContent = 'Login realizado! Redirecionando...';
+          setTimeout(() => window.location.href = 'index.html', 800);
+        } else {
+          msg.className = 'mensagem erro';
+          msg.textContent = data.erro || 'E-mail ou senha inválidos';
+        }
+      } catch (err) {
+        msg.className = 'mensagem erro';
+        msg.textContent = 'Erro ao conectar com o servidor. O backend está rodando?';
+      }
+    });
+  </script>
+</body>
+</html>

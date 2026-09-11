@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Minhas Compras — Jordão Agropet</title>
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    .historico-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+    .pedido-card {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 16px;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 16px;
+      align-items: center;
+    }
+    .pedido-card img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: #eee;
+      flex-shrink: 0;
+    }
+    .pedido-info {
+      flex: 1;
+    }
+    .pedido-info h3 {
+      color: #1b5e1f;
+      font-size: 16px;
+      margin-bottom: 4px;
+    }
+    .pedido-info .data {
+      font-size: 12px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .pedido-info .detalhes {
+      font-size: 14px;
+      color: #333;
+    }
+    .pedido-info .total {
+      font-weight: 700;
+      color: #1b5e1f;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      background: #fff3cd;
+      color: #856404;
+      margin-left: 8px;
+    }
+    .vazio {
+      text-align: center;
+      padding: 60px 20px;
+      color: #666;
+    }
+    .vazio i {
+      font-size: 48px;
+      color: #ccc;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-container">
+      <a href="index.html" class="logo">
+        <img src="img/logo.png" alt="Jordão Agropet">
+        <span>Jordão Agropet</span>
+      </a>
+
+      <form class="busca" id="formBusca" onsubmit="event.preventDefault(); window.location.href='index.html?busca=' + encodeURIComponent(document.getElementById('campoBusca').value);">
+        <input 
+          type="text" 
+          id="campoBusca" 
+          placeholder="Olá, o que você precisa hoje?" 
+          autocomplete="off"
+        >
+        <button type="submit" aria-label="Buscar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+        </button>
+      </form>
+
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="contato.html">Contato</a>
+        <a href="historico.html" class="ativo">Minhas Compras</a>
+        <a href="login.html" id="linkLogin" class="destaque">Entrar</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-conteudo">
+      <h1>Minhas Compras</h1>
+      <p>Aqui você acompanha todos os pedidos que já fez na Jordão Agropet</p>
+    </div>
+  </section>
+
+  <main>
+    <div class="historico-container" id="historicoContainer">
+      <p style="text-align:center;color:#666;">Carregando...</p>
+    </div>
+  </main>
+
+  <!-- WhatsApp Flutuante -->
+  <a href="https://wa.me/5519990143597?text=Ol%C3%A1%2C%20eu%20vim%20do%20site%20da%20Jord%C3%A3o%20Agropet" 
+     class="whatsapp-flutuante" 
+     title="Fale conosco no WhatsApp" 
+     target="_blank" 
+     rel="noopener noreferrer">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <footer>
+    <div class="footer-container">
+      <div class="footer-logo">
+        <img src="img/logo.png" alt="Jordão Agropet">
+      </div>
+      <div class="footer-info">
+        <div class="info-grupo email">
+          <div class="info-header">
+            <span class="icon-badge"><i class="fa-solid fa-envelope"></i></span>
+            Email
+          </div>
+          <a href="mailto:JordãoAgropet@outlook.com">JordãoAgropet@outlook.com</a>
+        </div>
+        <div class="info-grupo whatsapp">
+          <div class="info-header">
+            <span class="icon-badge"><i class="fa-brands fa-whatsapp"></i></span>
+            WhatsApp
+          </div>
+          <a href="https://wa.me/5519990143597?text=Ol%C3%A1%2C%20eu%20vim%20do%20site%20da%20Jord%C3%A3o%20Agropet" target="_blank">(19) 99014-3597</a>
+        </div>
+        <div class="info-grupo endereco">
+          <div class="info-header">
+            <span class="icon-badge"><i class="fa-solid fa-location-dot"></i></span>
+            Endereço
+          </div>
+          <p>R. Padre Antônio Vieira, 35 - Sala 02 (Jaraguá)</p>
+        </div>
+        <div class="info-grupo instagram">
+          <div class="info-header">
+            <span class="icon-badge"><i class="fa-brands fa-instagram"></i></span>
+            Instagram
+          </div>
+          <a href="https://www.instagram.com/jordaoagropet/" target="_blank">@jordaoagropet</a>
+        </div>
+      </div>
+      <div class="footer-contato-link">
+        <a href="contato.html" class="btn-contato-footer">Mais Informações</a>
+      </div>
+    </div>
+    <div class="footer-copy">
+      <p>© 2026 Jordão Agropet — Todos os direitos reservados</p>
+    </div>
+  </footer>
+
+  <script>
+    function formatarPreco(v) {
+      return 'R$ ' + Number(v).toFixed(2).replace('.', ',');
+    }
+    function formatarData(iso) {
+      const d = new Date(iso.replace(' ', 'T') + 'Z');
+      return d.toLocaleDateString('pt-BR', {
+        day: '2-digit', month: '2-digit', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+      });
+    }
+
+    async function carregarHistorico() {
+      const container = document.getElementById('historicoContainer');
+
+      try {
+        const meRes = await fetch('/api/me');
+        const me = await meRes.json();
+
+        if (!me) {
+          container.innerHTML = `
+            <div class="vazio">
+              <i class="fa-solid fa-lock"></i>
+              <p style="font-size:18px;margin-bottom:8px;">Você não está logado</p>
+              <p style="font-size:14px;margin-bottom:20px;">Faça login para ver seu histórico de compras</p>
+              <a href="login.html" class="btn-principal" style="display:inline-block;width:auto;padding:12px 24px;text-decoration:none;">Entrar</a>
+            </div>
+          `;
+          return;
+        }
+
+        const res = await fetch('/api/pedidos');
+        if (!res.ok) throw new Error('Erro ao buscar pedidos');
+        const pedidos = await res.json();
+
+        if (pedidos.length === 0) {
+          container.innerHTML = `
+            <div class="vazio">
+              <i class="fa-solid fa-bag-shopping"></i>
+              <p style="font-size:18px;margin-bottom:8px;">Você ainda não fez nenhuma compra</p>
+              <p style="font-size:14px;margin-bottom:20px;">Quando comprar, os pedidos aparecerão aqui</p>
+              <a href="index.html" class="btn-principal" style="display:inline-block;width:auto;padding:12px 24px;text-decoration:none;">Ver produtos</a>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = pedidos.map(p => {
+          const img = p.produto_imagem
+            ? `/uploads/${p.produto_imagem}`
+            : 'https://via.placeholder.com/80x80/4caf50/ffffff?text=?';
+
+          return `
+            <div class="pedido-card">
+              <img src="${img}" alt="${p.produto_nome}">
+              <div class="pedido-info">
+                <h3>${p.produto_nome}</h3>
+                <div class="data">
+                  <i class="fa-regular fa-calendar"></i> ${formatarData(p.data)}
+                </div>
+                <div class="detalhes">
+                  Quantidade: ${p.quantidade} · Total: <span class="total">${formatarPreco(p.total)}</span>
+                  <span class="status-badge">${p.status}</span>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = `
+          <p style="text-align:center;color:#c62828;padding:40px;">
+            Erro ao carregar histórico. O servidor está rodando?
+          </p>
+        `;
+      }
+    }
+
+    carregarHistorico();
+  </script>
+</body>
+</html>

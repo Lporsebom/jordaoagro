@@ -1,0 +1,23 @@
+# Dependências
+node_modules/
+
+# Banco de dados local
+backend/database.db
+*.db
+
+# Uploads locais
+backend/uploads/
+
+# Arquivos temporários
+*.log
+login.json
+cookies.txt
+admin_response.html
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
